@@ -1,14 +1,24 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList } from 'react-native'
+import {getPlayersFromApi} from "../API/MPGApi";
+import PlayerItem from "./PlayerItem";
 
 
 export default class Players extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            players : [],
+        }
     }
 
-    _displayPlayerDetail= () => {
-        this.props.navigation.navigate('PlayerDetail')
+    componentDidMount() {
+        getPlayersFromApi()
+            .then(data => this.setState({players: data.poolPlayers}))
+    }
+
+    _displayPlayerDetail= (player) => {
+        this.props.navigation.navigate('PlayerDetail', {player: player})
     };
 
 
@@ -16,9 +26,11 @@ export default class Players extends React.Component {
         return (
             <View>
                 <Text>Players page</Text>
-                <TouchableOpacity onPress={() => this._displayPlayerDetail()}>
-                    <Text>Click here to go to player page</Text>
-                </TouchableOpacity>
+                <FlatList
+                    keyExtractor={(item) => item.id.toString()}
+                    data={this.state.players}
+                    renderItem={({item}) => <PlayerItem player={item} displayPlayerDetail={this._displayPlayerDetail}/>}
+                />
             </View>
         )
     }
