@@ -3,3 +3,19 @@ export function getPlayersFromApi () {
         .then((response) => response.json())
         .catch((error) => console.error(error));
 }
+
+
+export function getPlayerDetailFromApi (id) {
+    const url = 'https://api.mpg.football/api/data/championship-player-stats/' + id + '/summary';
+
+    return fetch(url)
+        .then((response) => response.json())
+        .catch((error) => console.error(error))
+}
+
+
+export function getTeamsFromApi () {
+    return fetch('https://api.mpg.football/api/data/championship-clubs')
+        .then((response) => response.json())
+        .catch((error) => console.error(error));
+}
