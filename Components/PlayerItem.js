@@ -18,7 +18,7 @@ export default class PlayerItem extends React.Component {
         return (
             <View style={styles.main_container}>
                 <TouchableOpacity style={styles.touchable} onPress={() => displayPlayerDetail(player)}>
-                    <Text style={styles.player_name}>{player.firstName} {player.lastName}</Text>
+                    <Text style={styles.player_name}>{player.firstName}{player.firstName !== null && ' '}{player.lastName}</Text>
                     <Text style={styles.player_position}>{positions[player.ultraPosition]}</Text>
                     {this.state.showMore &&
                         <View>
@@ -26,8 +26,7 @@ export default class PlayerItem extends React.Component {
                             <Text>{Pluralize('match', player.stats.totalPlayedMatches, true)} {Pluralize('joué', player.stats.totalPlayedMatches)}</Text>
                             <Text>{Pluralize('titularisation', player.stats.totalStartedMatches, true)}</Text>
                             <Text>{Pluralize('but', player.stats.totalGoals, true)}</Text>
-                            {player.stats.averageRating !== undefined &&
-                            <Text>note moyenne : {player.stats.averageRating.toFixed(1)}</Text>}
+                            {player.stats.averageRating !== undefined && <Text>note moyenne : {player.stats.averageRating.toFixed(1)}</Text>}
                         </View>
                     }
                 </TouchableOpacity>
