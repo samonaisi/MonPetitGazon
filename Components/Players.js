@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Text, FlatList, ActivityIndicator, TextInput } from 'react-native'
+import {View, Text, FlatList, ActivityIndicator, TextInput, StyleSheet } from 'react-native'
 import {getPlayersFromApi} from "../API/MPGApi";
 import PlayerItem from "./PlayerItem";
 import {createPositionInitialFilters, positions} from "../Constants/Positions";
@@ -30,7 +30,6 @@ export default class Players extends React.Component {
     }
 
     _searchTextInputChanged(text) {
-        console.log(this.searchedPositions)
         this.searchedText = text;
         this._filtersChange()
     }
@@ -50,29 +49,67 @@ export default class Players extends React.Component {
     }
 
     _displayPlayerDetail = (player) => {
-        this.props.navigation.navigate('PlayerDetail', {player: player})
+        this.props.navigation.navigate('Détails du joueur', {player: player})
     };
 
 
     render() {
         return (
-            <View>
-                <Text>Players page</Text>
-                <TextInput
-                    placeholder='Rechercher un joueur'
-                    onChangeText={(text) => this._searchTextInputChanged(text)}
-                />
-                <PlayerPositionModal searchedPositions={this.searchedPositions} searchPositionChanged={this._searchPositionChanged}/>
+            <View style={styles.main_container}>
+                <Text style={styles.page_title}>Parcourir les joueurs</Text>
+                <View style={styles.filters}>
+                    <TextInput
+                        style={styles.text_input}
+                        placeholder='Rechercher un joueur'
+                        onChangeText={(text) => this._searchTextInputChanged(text)}
+                    />
+                    <PlayerPositionModal searchedPositions={this.searchedPositions} searchPositionChanged={this._searchPositionChanged}/>
+                </View>
                 <FlatList
                     keyExtractor={(item) => item.id.toString()}
                     data={this.state.filteredPlayers}
                     renderItem={({item}) => <PlayerItem player={item} displayPlayerDetail={this._displayPlayerDetail}/>}
                 />
                 {this.state.isLoading &&
-                <View>
+                <View style={styles.loading_container}>
                     <ActivityIndicator size='large' />
                 </View>}
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    main_container: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
+    page_title: {
+        margin: 5,
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#3B3D3B',
+    },
+    filters: {
+        flexDirection: 'row',
+    },
+    text_input: {
+        flex: 1,
+        marginLeft: 5,
+        marginRight: 5,
+        height: 45,
+        borderColor: '#3B3D3B',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingLeft: 5
+    },
+    loading_container: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 100,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+});
